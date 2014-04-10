@@ -1,0 +1,85 @@
+<p>
+  <b>User Name:</b>
+  <%= @auction.name %>
+</p>
+
+<p>
+  <b>Title:</b>
+  <%= @auction.title %>
+</p>
+
+<p>
+  <b>Product_Image:</b><br>
+  <%= image_tag @auction.avatar %>
+</p>
+<p>
+  <b>Description:</b>
+  <%= @auction.description %>
+</p>
+
+<p>
+  <b>Reserved price:</b>
+  <%= @auction.reserved_price %>
+</p>
+
+<p>
+  <b>Auction Available Till:</b>
+  <%= @auction.auction_ended %>
+</p>
+<div style="background-color:orange">
+<center> Your Bid must be <big><b>2% higher</big></b> then previous Bid Amount</center></div>
+<% if @auction.user_id == current_user.id %>
+<%= link_to 'Edit', edit_auction_path(@auction) %> |
+<%= link_to 'Back', auctions_path %>
+<% end %>
+<br>
+<% if @auction.auction_ended.to_time > Time.now %>
+
+  <% if @auction.biddings == [] %>
+      <%= render "biddings/form" %>
+  <% else %>
+      <h2>Last Bid for this Product :</h2>
+      <% @auction.biddings.each do |bid| %>
+      <% @lastbid = bid %> 
+      <% end %>
+      
+      <p>
+        <b>Bidder:</b>
+        <%= @lastbid.bidder %>
+      </p>
+   
+      <p>
+        <b>Bid Price:</b>
+        <%= @lastbid.bid_price %>
+      </p>
+      <p>
+      <% if current_user.role = false %> 
+          <%= link_to 'Destroy Bid', [@lastbid.auction, @lastbid],
+                 :confirm => 'Are you sure?',
+                 :method => :delete %></p>
+      <% end %>
+    <p>==============================================</p>
+  <%= render "biddings/form" %>
+<% end %>
+<% else %>
+<h2>Last Bid for this Product :</h2>
+<% @auction.biddings.each do |bid| %>
+<% @lastbid = bid %> 
+<% end %>
+  <p><b>Bidder:</b>
+  <%= @lastbid.bidder %></p>
+  
+  <p><b>Bid Price:</b>
+  <%= @lastbid.bid_price %></p>
+  
+<center><h1>Auction Ended</h1></center><center>
+<% if @auction.user_id == current_user.id %>
+<fieldset style="width:300px;border:2"><legend><big><b>Auction Details</b></big></legend>
+<% @auction.biddings.each do |bid| %>
+   <p>Bidder: <%= bid.bidder %></p>
+   <p>Bid Price: <%= bid.bid_price %></p>
+   <p>email: <%= find_user(bid.user_id).email %> </p>
+   ==================================================
+<% end %>
+</fieldset></center>
+<% end %><% end %>

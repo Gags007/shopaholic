@@ -1,0 +1,24 @@
+<h2 align="center"><u>Categories</h2></u>
+<%= form_for :product,  :html => {:id => 'products_form',:multipart => true,url: products_list_path } do |f| %>
+<% @categories = view_category %>
+<% @categories.each do |cat| %>
+<%= check_box_tag "name[]", cat.id, (params[:name] && (params[:name].include? cat.id.to_s)) ,:onclick => "refreshpage($('#products_form'));" %>
+<%= cat.name %><br>
+
+<% end %>
+
+<h2 align="center"><u>Brands</h2></u>
+<% @brands = view_brand %>
+<% @brands.each do |b| %>
+<%= check_box_tag "brand[]", b.id, (params[:brand] && (params[:brand].include? b.id.to_s)) ,:onclick => "refreshpage($('#products_form'));" %>
+<%= b.brand_name %><br>
+<% end %>
+
+
+<h2 align="center"><u> Price Range </u></h2>
+<% @cost = cost_product %>
+<% @cost.each do |c| %>
+<%= check_box_tag "price[]", c, (params[:price] && (params[:price].include? c.to_s)) ,:onclick => "refreshpage($('#products_form'));" %>
+<%= c %><br>
+<% end %>
+<% end %>
